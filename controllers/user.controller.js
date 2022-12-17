@@ -3,9 +3,10 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user.model");
 const asyncHandler = require("express-async-handler");
 const SignupUser = asyncHandler(async (req, res) => {
-  const { username, email, password,address } = req.body;
-
-  if (!username || !email || !password|| !address) {
+  const { username, email, password } = req.body;
+   
+   console.log(username);
+  if (!username && !email && !password) {
     res.json("Please enter the required field");
   }
   const UserExist = await User.findOne({ email });
@@ -19,17 +20,17 @@ const SignupUser = asyncHandler(async (req, res) => {
       username,
       email,
       password: Hashedpassword,
-      address,
     });
     user
-      .save()
-      .then(() =>
-        res.send({
+    .save()
+    .then(() =>
+        res.status(200).send({
            success:true,
            message:'user register succesfully!',
           _id: user.id,
           token: genrateToken(user._id),
-        })
+        }),
+        console.log(user)
       )
       .catch((err) => res.status(400).json("Error :" + err));
   }
