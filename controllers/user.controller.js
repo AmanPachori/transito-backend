@@ -32,12 +32,16 @@ const SignupUser = asyncHandler(async (req, res) => {
         }),
         console.log(user)
       )
-      .catch((err) => res.status(400).json("Error :" + err));
+      .catch((err) => res.status(400).json({
+        success:false,
+        message:'user register unsuccessfull!',
+      }));
   }
 });
 
 const SigninUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  console.log(email)
   const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
     res.status(200).json({
@@ -50,8 +54,6 @@ const SigninUser = asyncHandler(async (req, res) => {
     res.status(400).json({
       success:false,
       message:'user login unsuccessfull!',
-      _id: user.id,
-      token: genrateToken(user._id),
     });
   }
 });
@@ -61,8 +63,40 @@ const genrateToken = (id) => {
     expiresIn: "10d",
   });
 };
-
+const updateUser = asyncHandler (async (req, res)=>{
+  const id = req.params.id;
+  const {username, address,image} = req.body;
+  const myQuery = {_id:id}
+  const myopertn = {$set : {username:username,address:address, image :image}}
+  User.updateOne(myQuery, myopertn)
+    .then(() => {
+      res.status(200).json({
+        success: true,
+        message: "User data updated Successfully",
+      });
+    })
+    .catch((err) => res.status(400).json(
+      {
+        success:false,
+        message: 'Caught some error'
+      }
+     ));
+})
 const Getme = asyncHandler(async (req, res) => {
-  res.status(200).json(req.user);
+  const id = req.params.id;
+  User.findOne({_id:id})
+  .then((re)=>{
+    res.status(200).json({
+      success:true,
+      message: 'User data displayed successfully',
+      data : re
+    })
+  })
+   .catch((err) => res.status(400).json(
+    {
+      success:false,
+      message: 'User not Found or Caught some error'
+    }
+   ));
 });
-module.exports = { SignupUser, SigninUser, Getme };
+module.exports = { SignupUser, SigninUser, Getme,updateUser };
