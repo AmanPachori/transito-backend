@@ -4,9 +4,7 @@ const User = require("../models/user.model");
 const asyncHandler = require("express-async-handler");
 const SignupUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-   
-   console.log(username);
-  if (!username && !email && !password) {
+    if (!username && !email && !password) {
     res.json("Please enter the required field");
   }
   const UserExist = await User.findOne({ email });
@@ -78,7 +76,8 @@ const updateUser = asyncHandler (async (req, res)=>{
     .catch((err) => res.status(400).json(
       {
         success:false,
-        message: 'Caught some error'
+        message: 'Caught some error',
+        error : err
       }
      ));
 })
