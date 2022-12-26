@@ -11,7 +11,7 @@ const transactionDetails = require("../controllers/user.transactiondata")
 router.post("/register", SignupUser);
 router.post("/login", SigninUser);
 router.put("/update/:id",updateUser);
-router.get("/detail",VerifyToken,transactionDetails);
-router.get("/view/:id", Getme);
+router.get("/detail/",VerifyToken,transactionDetails);
+router.get("/view/:id",VerifyToken,Getme);
 
 module.exports = router;

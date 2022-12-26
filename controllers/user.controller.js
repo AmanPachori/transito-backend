@@ -83,6 +83,7 @@ const updateUser = asyncHandler (async (req, res)=>{
 })
 const Getme = asyncHandler(async (req, res) => {
   const id = req.params.id;
+  console.log(id);
   User.findOne({_id:id})
   .then((re)=>{
     res.status(200).json({
